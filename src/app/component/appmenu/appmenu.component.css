@@ -1,0 +1,26 @@
+.mat-elevation-z8{
+    background:  rgb(0, 80, 147);
+}
+.navTxtColor{
+color: white;
+}
+
+.background-image {
+    text-align: center;
+    min-height: 600px;
+    background-image: url('https://as1.ftcdn.net/v2/jpg/01/12/96/10/1000_F_112961073_AsHAEZ1koSc7Xfhtp2U3Lvmp6xboGOAH.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 80%;
+}
+
+.background-image-nav {
+    text-align: center;
+    min-height: 600px;
+    background-image: url('https://as1.ftcdn.net/v2/jpg/01/12/96/10/1000_F_112961073_AsHAEZ1koSc7Xfhtp2U3Lvmp6xboGOAH.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 80%;
+}

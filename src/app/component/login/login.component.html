@@ -1,0 +1,37 @@
+<form [formGroup]="_loginform" (ngSubmit)="proceedlogin()">
+    <mat-card >
+        <div class="login-image">
+            <img width="100%" height="150px" src='https://as1.ftcdn.net/v2/jpg/05/40/78/28/1000_F_540782871_Zv3ae5sC4wAR57Y0y33WwCeVw245xHaG.jpg' alt="Login Image">
+        </div>
+        <mat-card-header>
+          <h1>User Login</h1>
+        </mat-card-header>
+        <mat-card-content>
+
+            <mat-form-field>
+                <mat-label>Username</mat-label>
+                <input formControlName="username" matInput />
+            </mat-form-field>
+
+            <mat-form-field >
+                <mat-label>Password</mat-label>
+                <input formControlName="password" type="password" matInput />
+            </mat-form-field>
+            
+        </mat-card-content>
+        <mat-card-actions>
+            <div class="div-50">
+                <button type="submit" mat-raised-button  style="background-color: rgb(0, 30, 71); color: aliceblue;" >Login</button>
+            </div>
+            <div class="div-50" >
+                <button (click)="clear()" mat-raised-button style="background-color: rgb(0, 204, 235);" >Clear</button>
+            </div>
+            
+
+        </mat-card-actions>
+        <div class="div-50">
+            <a mat-button color="primary" style="color: rgb(0, 80, 147);" routerLink="/forgetpassword">Forget password</a>
+        </div>
+    </mat-card>
+
+</form>

@@ -1,0 +1,45 @@
+@if(showmenu){
+    <div>
+        <mat-toolbar color="black" class="mat-elevation-z8">
+            <button class="navTxtColor" mat-icon-button (click)="drawer.toggle()">
+                <mat-icon>menu</mat-icon>
+            </button>
+            <span class="navTxtColor">floodGUARD</span>
+            <span class="example-spacer"></span>
+            <span class="navTxtColor">{{Loginuser}}</span>
+            <button  mat-button [matMenuTriggerFor]="profile"><mat-icon class="navTxtColor">arrow_drop_down</mat-icon></button>
+            <mat-menu #profile>
+                <!--<button mat-menu-item>Userprofile</button>-->
+                <button mat-menu-item routerLink="/user/resetpassword">Reset Password</button>
+                <button mat-menu-item routerLink="/login">Logout</button>
+            </mat-menu>
+        </mat-toolbar>
+        <mat-drawer-container autosize class="background-image-nav">
+            <mat-drawer style="background-color: #dbd6d8;" #drawer opened="true" mode="side" position="start">
+                
+                    <mat-nav-list>
+                            <mat-list-item>
+                                <button style="width: 100%;" mat-button routerLink=""><mat-icon>home</mat-icon>DashBoard</button>
+                            </mat-list-item>
+                            @for(item of menulist;track item){
+                                <mat-list-item>
+                                    <button style="width: 100%;" mat-button [routerLink]="item.code">
+                                        <mat-icon>{{ getIcon(item.code) }}</mat-icon>
+                                        {{ item.name }}
+                                    </button>
+                                </mat-list-item>
+                            } 
+                    </mat-nav-list>
+                
+            </mat-drawer>
+            <mat-drawer-content>
+                    <router-outlet></router-outlet>
+                
+            </mat-drawer-content>
+        </mat-drawer-container>
+    </div>
+}@else{
+    <div class="">
+        <router-outlet></router-outlet>
+    </div> 
+}
