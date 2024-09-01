@@ -7,6 +7,9 @@ export interface riverStation {
     name: string,
     latitude: string,
     longitude: string,
-    isactive : boolean
+    isactive : boolean,
+    alertLevel: number | undefined,
+    minorLevel: number | undefined,
+    majorLevel: number | undefined
     
 }

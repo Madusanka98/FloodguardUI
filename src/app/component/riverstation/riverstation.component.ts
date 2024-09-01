@@ -20,7 +20,7 @@ import { MatSort } from '@angular/material/sort';
 export class RiverstationComponent implements OnInit{
 
   riverstationlist!: riverStation[];
-  displayedColumns: string[] = ["id", "name", "river", "latitude", "longitude","action"];
+  displayedColumns: string[] = ["id", "name", "river", "latitude", "longitude", "alertLevel","minorLevel","majorLevel","action"];
   datasource: any;
   _response:any;
   _permission: menupermission = { 

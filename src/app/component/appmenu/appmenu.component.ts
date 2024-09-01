@@ -56,10 +56,13 @@ export class AppmenuComponent implements OnInit, DoCheck {
   showmenu = false;
 
   ngOnInit(): void {
-    let userrole = localStorage.getItem('userrole') as string;
-    this.service.Loadmenubyrole(userrole).subscribe(item => {
-      this.menulist = item;
-    })
+    let userrole = localStorage.getItem('userrole') as string  | null | undefined;
+    if(userrole != null){
+      this.service.Loadmenubyrole(userrole).subscribe(item => {
+        this.menulist = item;
+      })
+    }
+    
 
 
   }

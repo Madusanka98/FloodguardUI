@@ -34,6 +34,20 @@
                 <td mat-cell *matCellDef="let element">{{element.longitude}}</td>
             </ng-container>
 
+            <ng-container matColumnDef="alertLevel" >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Alert Level</th>
+                <td mat-cell *matCellDef="let element">{{element.alertLevel}} m</td>
+            </ng-container>
+
+            <ng-container matColumnDef="minorLevel" >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Minor Level</th>
+                <td mat-cell *matCellDef="let element">{{element.minorLevel}} m</td>
+            </ng-container>
+
+            <ng-container matColumnDef="majorLevel" >
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>Major Level</th>
+                <td mat-cell *matCellDef="let element">{{element.majorLevel}} m</td>
+            </ng-container>
             <!--<ng-container matColumnDef="isactive" >
                 <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
                 <td mat-cell *matCellDef="let element">{{element.isactive}}</td>

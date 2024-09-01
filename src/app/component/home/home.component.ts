@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { Chart, ChartOptions  } from 'chart.js';
 
 @Component({
   selector: 'app-home',
@@ -22,12 +23,29 @@ import 'jspdf-autotable';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit {
-
+  public chart: Chart | undefined;
+  public test: Chart | undefined;
   currentPredictlist!: currentPredict[];
   datasource: any;
   displayedColumns: string[] = ["dateRange", "configTime", "stationName", "river", "rainfall", "riverHight"];
   isShow: boolean = false;
   ConfigTimes: string[] = ['3 Hours', '6 Hours', '12 Hours', '24 Hours'];
+  
+public rathnapuraRHight: string[] = [];
+public rathnapuraDRange: string[] = [];
+
+public ellagawaRHight: string[] = [];
+public ellagawaRDRange: string[] = [];
+
+public putupaulaRHight: string[] = [];
+public putupaulaRDRange: string[] = [];
+
+public maguraRHight: string[] = [];
+public maguraRDRange: string[] = [];
+
+public kalawellawaRHight: string[] = [];
+public kalawellawaDRange: string[] = [];
+
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -35,87 +53,181 @@ export class HomeComponent implements OnInit {
   searchForm: FormGroup;
 
   constructor(private service: HomeService, private toastr: ToastrService, private router: Router, private fb: FormBuilder) {
+    
     this.searchForm = this.fb.group({
       configHours: ['', Validators.required]
     });
   }
 
-  ngOnInit(): void {
-    this.Loadriver();
+  async ngOnInit(): Promise<void> {
+    await this.Loadriver();
+  
+    
+  
+    
   }
 
   Loadriver() {
-    this.service.GetallCurrentPredict("").subscribe(item => {
+    this.service.GetallCurrentPredict("7").subscribe(item => {
       if (item != null) {
         this.isShow = true;
         this.currentPredictlist = item;
         this.datasource = new MatTableDataSource<currentPredict>(this.currentPredictlist);
         this.datasource.paginator = this.paginator;
         this.datasource.sort = this.sort;
+
+        this.currentPredictlist.forEach(element => {
+          if (element.stationName === "Ratnapura") {
+            this.rathnapuraRHight = this.rathnapuraRHight.concat(element.riverHight.split(','));
+            this.rathnapuraDRange = this.rathnapuraDRange.concat(element.dateRange.split(','));
+          } else if (element.stationName === "Ellagawa") {
+            this.ellagawaRHight = this.ellagawaRHight.concat(element.riverHight.split(','));
+            this.ellagawaRDRange = this.ellagawaRDRange.concat(element.dateRange.split(','));
+          } else if (element.stationName === "Putupaula") {
+            this.putupaulaRHight = this.putupaulaRHight.concat(element.riverHight.split(','));
+            this.putupaulaRDRange = this.putupaulaRDRange.concat(element.dateRange.split(','));
+          } else if (element.stationName === "Magura") {
+            this.maguraRHight = this.maguraRHight.concat(element.riverHight.split(','));
+            this.maguraRDRange = this.maguraRDRange.concat(element.dateRange.split(','));
+          } else if (element.stationName === "Kalawellawa") {
+            this.kalawellawaRHight = this.kalawellawaRHight.concat(element.riverHight.split(','));
+            this.kalawellawaDRange = this.kalawellawaDRange.concat(element.dateRange.split(','));
+          }
+        });
+        this.generateCharts();
+      
+
       } else {
         this.isShow = false;
       }
     });
   }
 
-  findresult() {
-    if (this.searchForm.valid) {
-      let configHoursValue = this.searchForm.get('configHours')?.value;
-      if(configHoursValue == '3 Hours'){
-        configHoursValue='0';
-      }else if(configHoursValue == '6 Hours'){
-        configHoursValue='1';
-      }else if(configHoursValue == '12 Hours'){
-        configHoursValue='3';
-      }else if(configHoursValue == '24 Hours'){
-        configHoursValue='7';
-      }else{
-        configHoursValue='';
+  generateCharts(): void {
+    const labels = this.rathnapuraDRange;
+    
+    // Data for each chart
+    const chartData = [
+      {
+        id: 'chart1',
+        label: 'Putupaula',
+        data: this.putupaulaRHight,
+        fillColor: 'rgba(0, 123, 255, 0.2)', // Blue
+        borderColor: 'rgba(0, 123, 255, 1)',
+        floodLevels: [3, 4, 5]
+      },
+      {
+        id: 'chart2',
+        label: 'Ellagawa',
+        data: this.ellagawaRHight,
+        fillColor: 'rgba(255, 159, 64, 0.2)', // Orange
+        borderColor: 'rgba(255, 159, 64, 1)',
+        floodLevels: [10, 10.7, 12.2]
+      },
+      {
+        id: 'chart3',
+        label: 'Ratnapura',
+        data: this.rathnapuraRHight,
+        fillColor: 'rgba(40, 167, 69, 0.2)', // Green
+        borderColor: 'rgba(40, 167, 69, 1)',
+        floodLevels: [5.2, 7.5, 9.5]
+      },
+      {
+        id: 'chart4',
+        label: 'Magura',
+        data: this.maguraRHight,
+        fillColor: 'rgba(220, 53, 69, 0.2)', // Red
+        borderColor: 'rgba(220, 53, 69, 1)',
+        floodLevels: [4, 6, 7.5]
+      },
+      {
+        id: 'chart5',
+        label: 'Kalawellawa',
+        data: this.kalawellawaRHight,
+        fillColor: 'rgba(102, 16, 242, 0.2)', // Purple
+        borderColor: 'rgba(102, 16, 242, 1)',
+        floodLevels: [5, 6.5, 8]
       }
-      console.log('Config Hours:', configHoursValue);
-      this.service.GetallCurrentPredict(configHoursValue).subscribe(item => {
-        if (item != null) {
-          this.isShow = true;
-          this.currentPredictlist = item;
-          this.datasource = new MatTableDataSource<currentPredict>(this.currentPredictlist);
-          this.datasource.paginator = this.paginator;
-          this.datasource.sort = this.sort;
-        } else {
-          this.isShow = false;
+    ];
+
+    // Generate each chart
+    chartData.forEach(chart => {
+      this.createChart(chart.id, labels, chart.data, chart.label, chart.fillColor, chart.borderColor, chart.floodLevels);
+    });
+  }
+
+  createChart(id: string, labels: string[], data: string[], label: string, fillColor: string, borderColor: string, floodLevels: number[]): void {
+    new Chart(id, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: label,
+            data: data,
+            backgroundColor: fillColor,
+            borderColor: borderColor,
+            fill: true,
+            tension: 0.1
+          },
+          ...this.createFloodLevelDatasets(floodLevels, labels)
+        ]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 15, // Adjust the max value according to your data
+            ticks: {
+              stepSize: 0.5
+            },
+            title: {
+              display: true,
+              text: 'Water Level (M)'
+            }
+          },
+          x: {
+            title: {
+              display: true,
+              text: 'Time'
+            }
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            position: 'top'
+          }
         }
-      });
-      // Add any additional logic needed when searching for results
-    } else {
-      this.toastr.error('Please select a configuration hour.');
-    }
+      }
+    });
   }
 
-  exportToExcel() {
-    if (this.datasource != undefined) {
-      const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.datasource.data);
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Predict Results');
-      XLSX.writeFile(wb, 'Predict_Results.xlsx');
-    } else {
-      this.toastr.warning('No data to export.');
-    }
+  createFloodLevelDatasets(levels: number[], labels: string[]): any[] {
+    const colors = [
+      'rgba(183, 155, 16, 1)',  // GreenYellow (Alert Level)
+      'rgba(40, 68, 210, 1)',   // Yellow (Minor Flood Level)
+      'rgba(163, 5, 5, 1)',   // Orange (Major Flood Level)
+      'rgba(255, 0, 0, 0.2)'      // Red (Critical Flood Level)
+    ];
+  
+    const levelLabels = [
+      'Alert Level',
+      'Minor Flood Level',
+      'Major Flood Level',
+      'Critical Flood Level'
+    ];
+  
+    return levels.map((level, index) => ({
+      label: `${levelLabels[index]} (${level}M)`,
+      data: Array(labels.length).fill(level),
+      borderColor: colors[index],
+      borderWidth: 1.5, 
+      borderDash: [8, 10],
+      fill: false,
+      pointRadius: 0,
+      tension: 0
+    }));
   }
 
-  exportToPDF() {
-    if (this.datasource != undefined) {
-      const doc = new jsPDF();
-      const columns = this.displayedColumns.map(col => ({ title: col, dataKey: col }));
-      const rows = this.datasource.data.map((row: any) => {
-        const data: any = {};
-        this.displayedColumns.forEach(col => {
-          data[col] = row[col];
-        });
-        return data;
-      });
-      (doc as any).autoTable(columns, rows);
-      doc.save('Predict_Results.pdf');
-    } else {
-      this.toastr.warning('No data to export.');
-    }
-  }
 }

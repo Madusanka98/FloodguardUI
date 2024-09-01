@@ -25,6 +25,21 @@
                 <mat-label>Longitude</mat-label>
                 <input formControlName="longitude" matInput />
             </mat-form-field>
+            
+            <div fxLayout="row" fxLayoutGap="16px">
+                <mat-form-field fxFlex>
+                    <mat-label>Alert Level</mat-label>
+                    <input formControlName="alertLevel" type="number" matInput />
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                    <mat-label>Minor Level</mat-label>
+                    <input formControlName="minorLevel" type="number" matInput />
+                </mat-form-field>
+                <mat-form-field fxFlex>
+                    <mat-label>Major Level</mat-label>
+                    <input formControlName="majorLevel" type="number" matInput />
+                </mat-form-field>
+            </div>
 
             <div class="div-50">
                 <mat-checkbox formControlName="isactive">Is Active</mat-checkbox>

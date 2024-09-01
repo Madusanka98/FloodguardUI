@@ -24,7 +24,7 @@ export interface usercred {
 export interface loginresp {
     token: string;
     refreshToken: string;
-    userRole: string;
+    userRole: string ;
 }
 
 export interface menu {

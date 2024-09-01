@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { currentPredict } from '../_model/CurrentPredict.model';
+import { currentPredict } from '../_model/CurrentPredict.model'; 
 import { map, Observable } from 'rxjs';
 
 @Injectable({

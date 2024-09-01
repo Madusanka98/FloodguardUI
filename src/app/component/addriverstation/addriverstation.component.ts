@@ -45,7 +45,10 @@ export class AddriverstationComponent implements OnInit {
     latitude: this.builder.control('', Validators.required),
     longitude: this.builder.control('', Validators.required),
     isactive: this.builder.control(true),
-    stationId:this.builder.control(0)
+    stationId:this.builder.control(0, Validators.required),
+    alertLevel:this.builder.control(0, Validators.required),
+    minorLevel:this.builder.control(0, Validators.required),
+    majorLevel:this.builder.control(0, Validators.required),
   });
 
   fetchRivers() {
@@ -65,7 +68,10 @@ export class AddriverstationComponent implements OnInit {
         name: this.editdata.name,
         latitude: this.editdata.latitude,
         longitude: this.editdata.longitude,
-        isactive: this.editdata.isactive
+        isactive: this.editdata.isactive,
+        alertLevel: this.editdata.alertLevel,
+        minorLevel: this.editdata.minorLevel,
+        majorLevel: this.editdata.majorLevel
       });
 
       // Set the river object after fetching the rivers
@@ -85,6 +91,9 @@ export class AddriverstationComponent implements OnInit {
         longitude: this.riverStationform.value.longitude as string,
         isactive: this.riverStationform.value.isactive as boolean,
         stationId:this.riverStationform.value.stationId as unknown as number,
+        alertLevel:this.riverStationform.value.alertLevel as unknown as number,
+        minorLevel:this.riverStationform.value.minorLevel as unknown as number,
+        majorLevel:this.riverStationform.value.majorLevel as unknown as number,
       };
 
       if (!this.isedit) {

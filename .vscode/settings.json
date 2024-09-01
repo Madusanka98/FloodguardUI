@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/795fb40c-18b3-4285-b55b-4f1b8f99b4a7/resourceGroups/rg-bsc-research/providers/Microsoft.Web/sites/floodGUARD-ui",
+    "appService.deploySubpath": "dist\\floodGuard"
+}

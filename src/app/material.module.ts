@@ -15,9 +15,12 @@ import { MatToolbarModule } from "@angular/material/toolbar"
 import { MatSidenavModule } from "@angular/material/sidenav"
 import { MatListModule } from "@angular/material/list"
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { NgChartsModule } from "ng2-charts"
 @NgModule({
     imports: [
-        MatSelectModule
+        MatSelectModule,
+        NgChartsModule
       ],
     exports: [
         MatCardModule,
@@ -35,7 +38,8 @@ import { CommonModule } from '@angular/common';
         MatToolbarModule,
         MatSidenavModule,
         MatListModule,
-        CommonModule
+        CommonModule,
+        FlexLayoutModule,
     ]
 })
 export class MaterialModule { }

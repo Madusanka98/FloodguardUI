@@ -35,7 +35,7 @@ export class UserService {
     return this.http.post<loginresp>(this.baseUrl + 'Authorize/GenerateToken', _data);
   }
 
-  Loadmenubyrole(role: string) {
+  Loadmenubyrole(role: string | null | undefined) {
     return this.http.get<menu[]>(this.baseUrl + 'UserRole/GetAllMenusbyrole?userrole=' + role);
   }
 
