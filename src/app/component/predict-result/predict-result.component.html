@@ -19,34 +19,38 @@
 </div>
 <div *ngIf="isShow">
   <mat-card>
-    <mat-card-header>
+    <mat-card-header  style="justify-content: center;">
       <h1>Predict Result Listing</h1>
     </mat-card-header>
     <mat-card-content>
       <table mat-table [dataSource]="datasource" matSort>
         <ng-container matColumnDef="dateRange">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>dateRange</th>
-          <td mat-cell *matCellDef="let element">{{element.dateRange}}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Date Range</th>
+          <td mat-cell *matCellDef="let element">{{element.rangeDate}}</td>
         </ng-container>
         <ng-container matColumnDef="configTime">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>configTime</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Config Time</th>
           <td mat-cell *matCellDef="let element">{{element.configTime}}</td>
         </ng-container>
         <ng-container matColumnDef="stationName">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>stationName</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Station Name</th>
           <td mat-cell *matCellDef="let element">{{element.stationName}}</td>
         </ng-container>
         <ng-container matColumnDef="river">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>river</th>
-          <td mat-cell *matCellDef="let element">{{element.river}}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>River</th>
+          <td mat-cell *matCellDef="let element">{{element.riverName}}</td>
         </ng-container>
         <ng-container matColumnDef="rainfall">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>rainfall</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Rainfall</th>
           <td mat-cell *matCellDef="let element">{{element.rainfall}}</td>
         </ng-container>
         <ng-container matColumnDef="riverHight">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>riverHight</th>
-          <td mat-cell *matCellDef="let element">{{element.riverHight}}</td>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>River Hight</th>
+          <td mat-cell *matCellDef="let element">{{element.riverHeight}}</td>
+        </ng-container>
+        <ng-container matColumnDef="status">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+          <td mat-cell *matCellDef="let element">{{element.status}}</td>
         </ng-container>
 
         <tr class="table-header" mat-header-row *matHeaderRowDef="displayedColumns"></tr>

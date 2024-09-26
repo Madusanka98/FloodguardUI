@@ -13,6 +13,7 @@ import * as XLSX from 'xlsx';
 import { saveAs } from 'file-saver';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
+import { predictResult } from '../../_model/PredictResult.model';
 
 @Component({
   selector: 'app-predict-result',
@@ -22,9 +23,9 @@ import 'jspdf-autotable';
   styleUrl: './predict-result.component.css'
 })
 export class PredictResultComponent implements OnInit{
-  currentPredictlist!: currentPredict[];
+  currentPredictlist!: predictResult[];
   datasource: any;
-  displayedColumns: string[] = ["dateRange", "stationName", "river", "rainfall", "riverHight"];
+  displayedColumns: string[] = ["dateRange", "stationName", "river", "rainfall", "riverHight", "status"];
   isShow: boolean = false;
   ConfigTimes: string[] = ['3 Hours', '6 Hours', '12 Hours', '24 Hours'];
 
@@ -48,7 +49,7 @@ export class PredictResultComponent implements OnInit{
       if (item != null) {
         this.isShow = true;
         this.currentPredictlist = item;
-        this.datasource = new MatTableDataSource<currentPredict>(this.currentPredictlist);
+        this.datasource = new MatTableDataSource<predictResult>(this.currentPredictlist);
         this.datasource.paginator = this.paginator;
         this.datasource.sort = this.sort;
       } else {
@@ -76,7 +77,7 @@ export class PredictResultComponent implements OnInit{
         if (item != null) {
           this.isShow = true;
           this.currentPredictlist = item;
-          this.datasource = new MatTableDataSource<currentPredict>(this.currentPredictlist);
+          this.datasource = new MatTableDataSource<predictResult>(this.currentPredictlist);
           this.datasource.paginator = this.paginator;
           this.datasource.sort = this.sort;
         } else {

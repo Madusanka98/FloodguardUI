@@ -42,19 +42,22 @@ export class AddriverComponent implements OnInit{
 
   riverform = this.builder.group({
     id: this.builder.control(0),
-    name: this.builder.control('', Validators.required),
+    name: this.builder.control('', [
+      Validators.required, // Make 'name' field required
+      Validators.minLength(3), // Optionally, enforce a minimum length (3 in this example)
+    ]),
     isactive: this.builder.control(true)
-  })
+  });
 
   Saveriver() {
     if (this.riverform.valid) {
-
+      // Proceed with saving the river if form is valid
       let _obj: river = {
         id: this.riverform.value.id as unknown as number,
         name: this.riverform.value.name as string,
         isactive: this.riverform.value.isactive as boolean,
-      }
-
+      };
+  
       if (!this.isedit) {
         this.service.Createriver(_obj).subscribe(item => {
           this._response = item;
@@ -64,9 +67,9 @@ export class AddriverComponent implements OnInit{
           } else {
             this.toastr.error('Due to:' + this._response.message, 'Failed');
           }
-        })
-      }else{
-        _obj.id=this.editcode;
+        });
+      } else {
+        _obj.id = this.editcode;
         this.service.Updateriver(_obj).subscribe(item => {
           this._response = item;
           if (this._response.result === 'pass') {
@@ -75,11 +78,13 @@ export class AddriverComponent implements OnInit{
           } else {
             this.toastr.error('Due to:' + this._response.message, 'Failed');
           }
-        })
+        });
       }
-
-
+    } else {
+      // Mark all form controls as touched to trigger validation messages
+      this.riverform.markAllAsTouched();
     }
   }
+  
 
 } 

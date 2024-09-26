@@ -1,8 +1,10 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { currentPredict } from '../_model/CurrentPredict.model'; 
+//import { currentPredict } from '../_model/CurrentPredict.model'; 
+import { currentPredict } from '../_model/CurrentPredict.model';
 import { map, Observable } from 'rxjs';
+import { predictResult } from '../_model/PredictResult.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +25,10 @@ export class HomeService {
     );
   }*/
     GetallCurrentPredict(configHours:string){
-      return this.http.get<currentPredict[]>(this.baseUrl + 'HistoryData/currentPredict?configHours='+configHours);
+      return this.http.get<predictResult[]>(this.baseUrl + 'PredictResult/GetAll?configTime='+configHours);
+    }
+
+    GetallPredictResult(configHours:string){
+      return this.http.get<currentPredict[]>(this.baseUrl + 'HistoryData/currentResult?configHours='+configHours);
     }
 }

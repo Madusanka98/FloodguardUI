@@ -8,6 +8,23 @@ import { RiverstationService } from '../../_service/riverstation.service';
 import { riverStation } from '../../_model/riverstation.model';
 import { river } from '../river/river.component';
 import { RiverService } from '../../_service/river.service';
+import { AbstractControl, ValidatorFn } from '@angular/forms';
+
+// Custom Validator for Level Relationships
+export function levelValidator(): ValidatorFn {
+  return (control: AbstractControl): { [key: string]: boolean } | null => {
+    const alertLevel = control.get('alertLevel')?.value;
+    const minorLevel = control.get('minorLevel')?.value;
+    const majorLevel = control.get('majorLevel')?.value;
+
+    if (alertLevel != null && minorLevel != null && majorLevel != null) {
+      if (alertLevel < minorLevel || minorLevel > majorLevel) {
+        return { levelsInvalid: true };
+      }
+    }
+    return null;
+  };
+}
 
 @Component({
   selector: 'app-addriverstation',
@@ -41,15 +58,33 @@ export class AddriverstationComponent implements OnInit {
   riverStationform = this.builder.group({
     id: this.builder.control(0),
     name: this.builder.control('', Validators.required),
-    river: this.builder.control<river | null>(null, Validators.required), // Adjust the type here
-    latitude: this.builder.control('', Validators.required),
-    longitude: this.builder.control('', Validators.required),
+    river: this.builder.control<river | null>(null, Validators.required),
+    latitude: this.builder.control('', [
+      Validators.required, 
+      Validators.min(-90), 
+      Validators.max(90)
+    ]),
+    longitude: this.builder.control('', [
+      Validators.required, 
+      Validators.min(-180), 
+      Validators.max(180)
+    ]),
     isactive: this.builder.control(true),
-    stationId:this.builder.control(0, Validators.required),
-    alertLevel:this.builder.control(0, Validators.required),
-    minorLevel:this.builder.control(0, Validators.required),
-    majorLevel:this.builder.control(0, Validators.required),
-  });
+    stationId: this.builder.control(0, Validators.required),
+    alertLevel: this.builder.control('', [
+      Validators.required,
+      Validators.min(0)
+    ]),
+    minorLevel: this.builder.control('', [
+      Validators.required,
+      Validators.min(0)
+    ]),
+    majorLevel: this.builder.control('', [
+      Validators.required,
+      Validators.min(0)
+    ]),
+  }, { validators: levelValidator() });
+  
 
   fetchRivers() {
     this.riverservice.Getall().subscribe(data => {
@@ -63,26 +98,30 @@ export class AddriverstationComponent implements OnInit {
   loadEditData() {
     this.service.Getbycode(this.editcode).subscribe(item => {
       this.editdata = item;
+  
       this.riverStationform.patchValue({
         id: this.editdata.id,
         name: this.editdata.name,
         latitude: this.editdata.latitude,
         longitude: this.editdata.longitude,
         isactive: this.editdata.isactive,
-        alertLevel: this.editdata.alertLevel,
-        minorLevel: this.editdata.minorLevel,
-        majorLevel: this.editdata.majorLevel
+        alertLevel: this.editdata.alertLevel !== null ? this.editdata.alertLevel.toString() : null, // Convert to string
+        minorLevel: this.editdata.minorLevel !== null ? this.editdata.minorLevel.toString() : null, // Convert to string
+        majorLevel: this.editdata.majorLevel !== null ? this.editdata.majorLevel.toString() : null, // Convert to string
       });
-
-      // Set the river object after fetching the rivers
-      const selectedRiver = this.rivers.find(r => r.id === this.editdata.river.id) || null;
-      this.riverStationform.controls['river'].setValue(selectedRiver);
+  
+      // Check if rivers are loaded before setting the river
+      if (this.rivers.length > 0) {
+        const selectedRiver = this.rivers.find(r => r.id === this.editdata.river?.id) || null;
+        this.riverStationform.controls['river'].setValue(selectedRiver);
+      }
     });
   }
+  
+  
 
   SaveriverStation() {
     if (this.riverStationform.valid) {
-
       let _obj: riverStation = {
         id: this.riverStationform.value.id as unknown as number,
         name: this.riverStationform.value.name as string,
@@ -90,12 +129,12 @@ export class AddriverstationComponent implements OnInit {
         latitude: this.riverStationform.value.latitude as string,
         longitude: this.riverStationform.value.longitude as string,
         isactive: this.riverStationform.value.isactive as boolean,
-        stationId:this.riverStationform.value.stationId as unknown as number,
-        alertLevel:this.riverStationform.value.alertLevel as unknown as number,
-        minorLevel:this.riverStationform.value.minorLevel as unknown as number,
-        majorLevel:this.riverStationform.value.majorLevel as unknown as number,
+        stationId: this.riverStationform.value.stationId as unknown as number,
+        alertLevel: this.riverStationform.value.alertLevel as unknown as number,
+        minorLevel: this.riverStationform.value.minorLevel as unknown as number,
+        majorLevel: this.riverStationform.value.majorLevel as unknown as number,
       };
-
+  
       if (!this.isedit) {
         this.service.CreateriverStation(_obj).subscribe(item => {
           this._response = item;
@@ -118,6 +157,12 @@ export class AddriverstationComponent implements OnInit {
           }
         });
       }
+    } else {
+      // Mark all controls as touched to trigger validation messages
+      this.riverStationform.markAllAsTouched();
     }
   }
+  
+
+  
 }

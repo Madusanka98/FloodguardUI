@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { MaterialModule } from '../../material.module';
 import { Router, RouterLink } from '@angular/router';
 import { registerconfirm, userregister } from '../../_model/user.model';
@@ -17,10 +17,9 @@ import { RiverstationService } from '../../_service/riverstation.service';
 })
 export class RegisterComponent {
 
-  constructor(private builder: FormBuilder, private service: UserService, private toastr: ToastrService,private riverStationService: RiverstationService,
-    private router: Router) {
+  constructor(private builder: FormBuilder, private service: UserService, private toastr: ToastrService, private riverStationService: RiverstationService,
+    private router: Router) {}
 
-  }
   ngOnInit(): void {
     this.fetchRiverStations();
   }
@@ -30,76 +29,59 @@ export class RegisterComponent {
   riverStations: riverStation[] = [];
 
   _regform = this.builder.group({
-
     username: this.builder.control('', Validators.compose([Validators.required, Validators.minLength(5)])),
-    //password: this.builder.control('', Validators.required),
-    //confirmpassword: this.builder.control('', Validators.required),
     name: this.builder.control('', Validators.required),
-    email: this.builder.control('', Validators.required),
-    phone: this.builder.control('', Validators.required),
+    email: this.builder.control('', [Validators.required, Validators.email]),
+    phone: this.builder.control('', [
+      Validators.required,
+      Validators.pattern(/^(?:\+94\s?\d{9}|0\d{9})$/)  // Accepts either +94 followed by 9 digits or 0 followed by 9 digits
+    ]),
     userType: this.builder.control('', Validators.required),
-    riverStations: this.builder.control<riverStation | null>(null, Validators.required), 
+    riverStations: this.builder.control<riverStation | null>(null, Validators.required),
   })
+  
+  
 
   proceedregister() {
     debugger;
     if (this._regform.valid) {
+      // Preprocess the phone number to ensure it starts with +94 and is correctly formatted
+      let phone = this._regform.value.phone as string;
+  
+      // Check if the phone starts with '0' and replace it with '+94 '
+      if (phone.startsWith('0')) {
+        phone = `+94 ${phone.slice(1)}`; // Remove leading 0 and add '+94 '
+      } else if (!phone.startsWith('+94')) {
+        this.toastr.error('Phone number must start with +94 or 0', 'Invalid Format');
+        return;
+      }
+  
       let _obj: userregister = {
         userName: this._regform.value.username as string,
         name: this._regform.value.name as string,
-        phone: this._regform.value.phone as string,
+        phone: phone,  // Use the modified phone number
         email: this._regform.value.email as string,
         userType: this._regform.value.userType as string,
         riverStations: this._regform.value.riverStations as unknown as riverStation[],
-        //password: this._regform.value.password as string
       }
+  
       this.service.Userregisteration(_obj).subscribe(item => {
         this._response = item;
         console.log(this._response);
-        if (this._response.result == 'pass') {
-          this.toastr.success('User Register successfully', 'Success');
-            this.router.navigateByUrl('/user');
-          /*let _confirmobj: registerconfirm = {
-            userid: this._response.message,
-            username: _obj.userName,
-            otptext: ''
-          }
-          this.service._registerresp.set(_confirmobj);
-          this.toastr.success('Validate OTP & complete the registeration', 'Registeration');
-          this.router.navigateByUrl('/confirmotp');*/
+        if (this._response.result === 'pass') {
+          this.toastr.success('User Registered successfully', 'Success');
+          this.router.navigateByUrl('/user');
         } else {
-          this.toastr.error('Failed due to : ' + this._response.message, 'Registeration Failed')
+          this.toastr.error('Failed due to: ' + this._response.message, 'Registration Failed');
         }
       });
-
     }
   }
+  
 
   fetchRiverStations() {
     this.riverStationService.Getall().subscribe(data => {
-      debugger;
       this.riverStations = data;
-      //if (this.isedit) {
-        //this.loadEditData(); // Load edit data after rivers are fetched
-      //}
     });
   }
-
-  /*loadEditData() {
-    this.service.Getbycode(this.editcode).subscribe(item => {
-      this.editdata = item;
-      this.riverStationform.patchValue({
-        id: this.editdata.id,
-        name: this.editdata.name,
-        latitude: this.editdata.latitude,
-        longitude: this.editdata.longitude,
-        isactive: this.editdata.isactive
-      });
-
-      // Set the river object after fetching the rivers
-      const selectedRiver = this.rivers.find(r => r.id === this.editdata.river.id) || null;
-      this.riverStationform.controls['river'].setValue(selectedRiver);
-    });
-  }*/
-
 }

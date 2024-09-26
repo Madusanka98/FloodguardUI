@@ -1,37 +1,43 @@
-
 <form [formGroup]="riverform" (ngSubmit)="Saveriver()">
 
     <mat-card>
-        <mat-card-header>
-          <h1>{{title}}</h1>
-        </mat-card-header>
-        <mat-card-content>
-
-            <!--<mat-form-field>
-                <mat-label>Code</mat-label>
-                <input formControlName="code" matInput />
-            </mat-form-field>-->
-            <mat-form-field>
-                <mat-label>Name</mat-label>
-                <input formControlName="name" matInput />
-            </mat-form-field>
-
-            
-            <div class="div-50">
-                <mat-checkbox formControlName="isactive">Is Active</mat-checkbox>
-            </div>
-            
-        </mat-card-content>
-        <mat-card-actions>
-            <div class="div-50">
-                <button type="submit" mat-raised-button style="background-color: rgb(0, 30, 71); color: aliceblue;"><mat-icon>add_circle</mat-icon>Save</button>
-            </div>
-            <div class="div-50">
-                <a routerLink="/river" mat-raised-button style="background-color: rgb(0, 204, 235);"><mat-icon>cancel</mat-icon>Cancel</a>
-            </div>
-            
-
-        </mat-card-actions>
+      <mat-card-header>
+        <h1>{{title}}</h1>
+      </mat-card-header>
+      <mat-card-content>
+  
+        <!-- River Name Field with Validation -->
+        <mat-form-field>
+          <mat-label>Name</mat-label>
+          <input formControlName="name" matInput />
+          
+          <!-- Display error if 'name' is required and form is either touched or submitted -->
+          <mat-error *ngIf="riverform.get('name')?.hasError('required') && (riverform.get('name')?.touched || riverform.get('name')?.dirty)">
+            River name is required
+          </mat-error>
+          <mat-error *ngIf="riverform.get('name')?.hasError('minlength') && (riverform.get('name')?.touched || riverform.get('name')?.dirty)">
+            River name must be at least 3 characters long
+          </mat-error>
+        </mat-form-field>
+  
+        <!-- Active Checkbox -->
+        <div class="div-50">
+          <mat-checkbox formControlName="isactive">Is Active</mat-checkbox>
+        </div>
+  
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="div-50">
+          <button type="submit" mat-raised-button style="background-color: rgb(0, 30, 71); color: aliceblue;">
+            <mat-icon>add_circle</mat-icon>Save
+          </button>
+        </div>
+        <div class="div-50">
+          <a routerLink="/river" mat-raised-button style="background-color: rgb(0, 204, 235);">
+            <mat-icon>cancel</mat-icon>Cancel
+          </a>
+        </div>
+      </mat-card-actions>
     </mat-card>
-
-</form>
+  </form>
+  

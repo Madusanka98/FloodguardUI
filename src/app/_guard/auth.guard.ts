@@ -33,7 +33,7 @@ export const authGuard: CanActivateFn = (route, state) => {
     
 
   } else {
-    toastr.warning('Unauthorized access');
+    //toastr.warning('Unauthorized access');
     router.navigateByUrl('/login');
     return false;
   }

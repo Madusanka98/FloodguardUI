@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
   public test: Chart | undefined;
   currentPredictlist!: currentPredict[];
   datasource: any;
-  displayedColumns: string[] = ["dateRange", "configTime", "stationName", "river", "rainfall", "riverHight"];
+  displayedColumns: string[] = ["Date Range", "ConfigTime", "Station Name", "River", "Rainfall", "River Hight"];
   isShow: boolean = false;
   ConfigTimes: string[] = ['3 Hours', '6 Hours', '12 Hours', '24 Hours'];
   
@@ -68,7 +68,7 @@ public kalawellawaDRange: string[] = [];
   }
 
   Loadriver() {
-    this.service.GetallCurrentPredict("7").subscribe(item => {
+    this.service.GetallPredictResult("7").subscribe(item => {
       if (item != null) {
         this.isShow = true;
         this.currentPredictlist = item;

@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         this.service.Loadmenubyrole(this._response.userRole).subscribe(item=>{
           this.service._menulist.set(item);
         })
-
+        this.toastr.success('Login successfully', 'Success');
         this.router.navigateByUrl('/');
       }, error => {
         this.toastr.error('Failed to login', error.error.title)
